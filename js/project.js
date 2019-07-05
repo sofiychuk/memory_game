@@ -116,7 +116,7 @@ window.onload = function () {
 
   //Ставимо таймер
   function timer() {
-    var seconds = 30;
+    var seconds = 40;
     var seconds_timer_id = setInterval(function () {
       if (seconds > 0) {
         seconds--;
