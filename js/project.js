@@ -19,7 +19,6 @@ window.onload = function () {
 
   //Сортуємо масив в довільному порядку
   numbersArray.sort(() => 0.5 - Math.random());
-  console.log(numbersArray);
 
   //Створюємо об'єкт з масиву де елемент масиву є ключем + додаєм значення на перевірку співпадінь
   numbersArray.forEach(function (item, index) {
@@ -77,7 +76,6 @@ window.onload = function () {
       ++numClick;
       idFirst = $('.active').first().find(".card__back").attr('id');
       idSecond = $('.active').last().find(".card__back").attr('id');
-
       //Основна перевірка кількості кліків та підрахунок рахунку
       if (numClick % 2 == 0) {
         if (cardsCollection[idFirst].value == cardsCollection[idSecond].value) {
@@ -99,6 +97,7 @@ window.onload = function () {
         }
         numClick = 0;
       }
+      if (idFirst && idSecond) return;
     });
   }
 
