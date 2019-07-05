@@ -20,7 +20,7 @@ window.onload = function () {
   //Сортуємо масив в довільному порядку
   numbersArray.sort(() => 0.5 - Math.random());
 
-  //Створюємо об'єкт з масиву де елемент масиву є ключем + додаєм значення на перевірку співпадінь
+  //Створюємо об'єкт з масиву де номер елемента масиву є ключем
   numbersArray.forEach(function (item, index) {
     cardsCollection[index + 1] = {
       value: item,
