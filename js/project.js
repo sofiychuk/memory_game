@@ -7,11 +7,12 @@ window.onload = function () {
   var cardsCollection = {};
   var numClick = 0;
   var idFirst = 0;
-  var idSecond = 0;
+  var currentId = 0;
   var card = $(".card");
   var score = 0;
   var countWin = 0;
-  var isBoardBlocked = true;
+  var isBoardBlock = false;
+
   //Створюємо масив
   for (let i = 1; i <= max; i++) {
     numbersArray.push(i, i);
@@ -20,11 +21,13 @@ window.onload = function () {
   //Сортуємо масив в довільному порядку
   numbersArray.sort(() => 0.5 - Math.random());
 
-  //Створюємо об'єкт з масиву де номер елемента масиву є ключем
+
+  //Створюємо об'єкт з масиву де елемент масиву є ключем + додаєм значення на перевірку співпадінь
   numbersArray.forEach(function (item, index) {
     cardsCollection[index + 1] = {
       value: item,
-      isMatch: false
+      isMatch: false,
+      isOpen: false
     };
   });
 
@@ -62,6 +65,7 @@ window.onload = function () {
   //Старт гри з функціоналом кліка картки
   function startGame(ev) {
 
+
     //Відключаємо кнопку після старта
     $(this).attr('disabled', true)
     //Показуємо всі карти на 2с.
@@ -70,36 +74,29 @@ window.onload = function () {
       card.toggleClass("active");
     }, 2000);
 
+
     //Відкриваєм картку 
     $('.card').on('click', function () {
-      ++numClick;
-      var secondClick;
-      secondClick = 0;
-      //Основна перевірка кількості кліків та підрахунок рахунку
-      if(isBoardBlocked){
-        
+      idFirst = currentId;
+      currentId = $(this).find(".card__back").attr('id');
+      if (isBoardBlock) {
         $(this).addClass('active');
-        idFirst = $(this).first().find(".card__back").attr('id');
-
-        console.log(idFirst)
-        isBoardBlocked = false;
         return
       }
-      if(secondClick == 0){
-        idSecond = $(this).last().find(".card__back").attr('id');
-        secondClick = idSecond;
-        console.log(secondClick)
-        if(idFirst == secondClick){
-          numClick = 1;
-          return
-        }
+      ++numClick;
+      if (idFirst === currentId) {
         $(this).addClass('active');
+        numClick = 1;
+        return
       }
-      if (numClick % 2 == 0) {
-        isBoardBlocked = true;
-        if (cardsCollection[idFirst].value == cardsCollection[secondClick].value) {
+      $(this).addClass('active');
+      //Основна перевірка кількості кліків та підрахунок рахунку
+      if (numClick % 2 === 0) {
+        isBoardBlock = true;
+        if (cardsCollection[idFirst].value === cardsCollection[currentId].value) {
           cardsCollection[idFirst].isMatch = true;
-          cardsCollection[secondClick].isMatch = true;
+          cardsCollection[currentId].isMatch = true;
+
           $('.active').addClass("match");
           card.removeClass("active");
           score += 10;
@@ -109,16 +106,15 @@ window.onload = function () {
           if (countWin == 10) {
             return endGame();
           }
-          secondClick = 0;
+          isBoardBlock = false;
         } else {
-          secondClick = 0;
           setTimeout(function () {
             card.removeClass("active");
+            isBoardBlock = false;
           }, 500);
         }
         numClick = 0;
       }
-      // if (idFirst && idSecond) return;
     });
   }
 
@@ -134,25 +130,33 @@ window.onload = function () {
     $(".main").addClass('end-game')
   }
 
-  // //Ставимо таймер
-  // function timer() {
-  //   var seconds = 35;
-  //   var seconds_timer_id = setInterval(function () {
-  //     if (seconds > 0) {
-  //       seconds--;
-  //       if (seconds < 10) {
-  //         seconds = "0" + seconds;
-  //       }
-  //       if (seconds == 00) {
-  //         return endGame()
-  //       }
-  //       $(".seconds").text(seconds);
-  //     } else {
-  //       clearInterval(seconds_timer_id);
-  //     }
-  //   }, 1000);
-  // }
+  // Ставимо таймер
+  function timer() {
+    var seconds = 35;
+    var seconds_timer_id = setInterval(function () {
+      if (seconds > 0) {
+        seconds--;
+        if (seconds < 10) {
+          seconds = "0" + seconds;
+        }
+        if (seconds == 00) {
+          seconds = '00';
+          $(".seconds").text(seconds);
+          if (!score) {
+            $(".result").text(score);
+          }
+          return endGame();
+        }
+        if (countWin == 10) {
+          clearInterval(seconds_timer_id);
+        }
+        $(".seconds").text(seconds);
+      } else {
+        clearInterval(seconds_timer_id);
+      }
+    }, 1000);
+  }
 
-  // $('#start').on('click', timer)
+  $('#start').on('click', timer)
   $('#start').on('click', startGame)
 }
