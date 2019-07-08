@@ -11,7 +11,7 @@ window.onload = function () {
   var card = $(".card");
   var score = 0;
   var countWin = 0;
-
+  var isBoardBlocked = true;
   //Створюємо масив
   for (let i = 1; i <= max; i++) {
     numbersArray.push(i, i);
@@ -72,15 +72,34 @@ window.onload = function () {
 
     //Відкриваєм картку 
     $('.card').on('click', function () {
-      $(this).toggleClass('active');
       ++numClick;
-      idFirst = $('.active').first().find(".card__back").attr('id');
-      idSecond = $('.active').last().find(".card__back").attr('id');
+      var secondClick;
+      secondClick = 0;
       //Основна перевірка кількості кліків та підрахунок рахунку
+      if(isBoardBlocked){
+        
+        $(this).addClass('active');
+        idFirst = $(this).first().find(".card__back").attr('id');
+
+        console.log(idFirst)
+        isBoardBlocked = false;
+        return
+      }
+      if(secondClick == 0){
+        idSecond = $(this).last().find(".card__back").attr('id');
+        secondClick = idSecond;
+        console.log(secondClick)
+        if(idFirst == secondClick){
+          numClick = 1;
+          return
+        }
+        $(this).addClass('active');
+      }
       if (numClick % 2 == 0) {
-        if (cardsCollection[idFirst].value == cardsCollection[idSecond].value) {
+        isBoardBlocked = true;
+        if (cardsCollection[idFirst].value == cardsCollection[secondClick].value) {
           cardsCollection[idFirst].isMatch = true;
-          cardsCollection[idSecond].isMatch = true;
+          cardsCollection[secondClick].isMatch = true;
           $('.active').addClass("match");
           card.removeClass("active");
           score += 10;
@@ -90,14 +109,16 @@ window.onload = function () {
           if (countWin == 10) {
             return endGame();
           }
+          secondClick = 0;
         } else {
+          secondClick = 0;
           setTimeout(function () {
             card.removeClass("active");
           }, 500);
         }
         numClick = 0;
       }
-      if (idFirst && idSecond) return;
+      // if (idFirst && idSecond) return;
     });
   }
 
@@ -113,25 +134,25 @@ window.onload = function () {
     $(".main").addClass('end-game')
   }
 
-  //Ставимо таймер
-  function timer() {
-    var seconds = 35;
-    var seconds_timer_id = setInterval(function () {
-      if (seconds > 0) {
-        seconds--;
-        if (seconds < 10) {
-          seconds = "0" + seconds;
-        }
-        if (seconds == 00) {
-          return endGame()
-        }
-        $(".seconds").text(seconds);
-      } else {
-        clearInterval(seconds_timer_id);
-      }
-    }, 1000);
-  }
+  // //Ставимо таймер
+  // function timer() {
+  //   var seconds = 35;
+  //   var seconds_timer_id = setInterval(function () {
+  //     if (seconds > 0) {
+  //       seconds--;
+  //       if (seconds < 10) {
+  //         seconds = "0" + seconds;
+  //       }
+  //       if (seconds == 00) {
+  //         return endGame()
+  //       }
+  //       $(".seconds").text(seconds);
+  //     } else {
+  //       clearInterval(seconds_timer_id);
+  //     }
+  //   }, 1000);
+  // }
 
-  $('#start').on('click', timer)
+  // $('#start').on('click', timer)
   $('#start').on('click', startGame)
 }
