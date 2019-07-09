@@ -26,11 +26,55 @@ body {
   -webkit-text-fill-color: transparent;
 }
 .main {
-  display: flex;
   align-items: center;
   height: 900px;
   width: 770px;
   position: relative;
+  display: flex;
+  padding-top: 150px;
+ 
+}
+.choosen-lvl{
+  display: none;
+}
+.choose-lvl{
+  text-align: center;
+  width: 100%
+}
+.choose-lvl--hide{
+  display: none;
+}
+.game__title--start,
+.title-lvl{
+  text-align: center;
+  font-size: 70px;
+  left: 23%;
+  background: linear-gradient(3deg, rgba(218, 139, 23, 1) 43%,  rgba(236, 232, 74, 1) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.title-lvl{
+  font-size: 40px;
+}
+.choose-btn{
+width: 150px;
+height: 70px;
+  cursor: url('../img/Pointer_human_32x32.png'), pointer;
+  background: url('../img/bg-3.png');
+  background-size: cover;
+  border: 2px solid rgba(218, 139, 23, 1);
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 40px;
+  color: rgba(218, 139, 23, 1);
+}
+.choose-btn p{
+  background: linear-gradient(0deg, rgba(236,232,74,1) 7%, rgba(218,23,23,1) 82%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.choose-btn:active{
+transform: scale(.95);
 }
 
 .card-wrap {
